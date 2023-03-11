@@ -13,3 +13,8 @@ def content(request, title):
         "retrieve": util.get_entry(title),
         "name": title
     })
+
+def search(request):
+        searched = request.GET['q']
+        return render(request, "encyclopedia/search.html", {
+            "searched":searched})
