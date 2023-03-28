@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.shortcuts import redirect
 
 from . import util
 
@@ -16,5 +17,14 @@ def content(request, title):
 
 def search(request):
         searched = request.GET['q']
-        return render(request, "encyclopedia/search.html", {
-            "searched":searched})
+        if not util.get_entry(searched):
+            matches = []
+            for entry in util.list_entries():
+                 if searched.lower() in entry.lower():
+                      matches.append(entry)
+            return render(request, "encyclopedia/search.html", {
+                "searched": searched,
+                "matches": matches
+                })
+        else:
+             return redirect(f"/wiki/{searched}")
