@@ -10,11 +10,16 @@ code {
 h1 {
     margin-top: 0px;
     padding-top: 20px;
+    margin-bottom: 40px;
+}
+
+#create_textarea {
+    height: 60vh;
 }
 
 textarea {
-    height: 90vh;
-    width: 80%;
+    resize: none;
+    display: block;
 }
 
 .main {
@@ -35,4 +40,16 @@ textarea {
 
 .sidebar h2 {
     margin-top: 5px;
+}
+
+button {
+    display: block;
+    margin-top: 10px;
+}
+
+label {
+    display: block;
+    font-size: large;
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
