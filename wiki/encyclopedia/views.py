@@ -5,9 +5,25 @@ from django.urls import reverse
 
 from . import util
 
+
+# Checks if the title that user wants to add already exists or not.
+def is_unique(title):
+     if not util.get_entry(title):
+          return True
+     return False
+
+
 class NewEntryForm(forms.Form):
-     title = forms.CharField(label="Title")
-     content = forms.CharField(widget=forms.Textarea(attrs={"rows": "20", "cols": "100"}))
+    title = forms.CharField(label="Title")
+    content = forms.CharField(widget=forms.Textarea(attrs={"rows": "20", "cols": "100"}))
+    
+    # If the title already exists, application raises a validation error without saving.
+    def clean_title(self):
+        data = self.cleaned_data.get("title")
+        
+        if not is_unique(data):
+             raise forms.ValidationError("This page already exists")
+        return data
 
 
 def index(request):
