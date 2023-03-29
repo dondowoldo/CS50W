@@ -53,3 +53,9 @@ label {
     margin-top: 10px;
     margin-bottom: 10px;
 }
+
+#edit {
+    display: flex;
+    justify-content: flex-end;
+    margin-right: 20px;
+}

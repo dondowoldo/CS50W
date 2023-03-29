@@ -22,9 +22,12 @@ class NewEntryForm(forms.Form):
         data = self.cleaned_data.get("title")
         
         if not is_unique(data):
-             raise forms.ValidationError("This page already exists")
+             raise forms.ValidationError("Error: This page already exists.")
         return data
 
+class EditEntryForm(forms.Form):
+    edit_title = forms.CharField(label="Title")
+    edit_content = forms.CharField(widget=forms.Textarea(attrs={"rows": "20", "cols": "100"}))
 
 def index(request):
     return render(request, "encyclopedia/index.html", {
@@ -67,3 +70,25 @@ def create(request):
              return render(request, "encyclopedia/create.html", {
                   "form": form
              })
+
+def edit(request, title):
+    if request.method == "GET":
+        content = util.get_entry(title)
+        edit_form = EditEntryForm({"edit_title": title, "edit_content": content})
+    
+        return render(request, "encyclopedia/edit.html", {
+             "form": edit_form,
+             "title": title 
+            })
+    else:
+         edit_form = EditEntryForm(request.POST)
+         if edit_form.is_valid():
+              title = edit_form.cleaned_data["edit_title"]
+              content = edit_form.cleaned_data["edit_content"]
+              util.save_entry(title, content)
+              return HttpResponseRedirect(reverse("wiki:title", args=[title]))
+         else:
+              return render(request, "encyclopedia/edit.html", {
+                 "form": edit_form  
+              })
+         
