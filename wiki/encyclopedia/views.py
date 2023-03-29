@@ -2,6 +2,8 @@ from django.shortcuts import render
 from django import forms
 from django.http import HttpResponseRedirect
 from django.urls import reverse
+import random
+import markdown2
 
 from . import util
 
@@ -26,7 +28,6 @@ class NewEntryForm(forms.Form):
         return data
 
 class EditEntryForm(forms.Form):
-    edit_title = forms.CharField(label="Title")
     edit_content = forms.CharField(widget=forms.Textarea(attrs={"rows": "20", "cols": "100"}))
 
 def index(request):
@@ -35,10 +36,17 @@ def index(request):
     })
 
 def content(request, title):
-    return render(request, "encyclopedia/content.html", {
-        "retrieve": util.get_entry(title),
-        "name": title
-    })
+    if util.get_entry(title):
+        return render(request, "encyclopedia/content.html", {
+            "retrieve": markdown2.markdown(util.get_entry(title)),
+            "name": title
+                })
+    else:
+         return render(request, "encyclopedia/content.html", {
+              "retrieve": util.get_entry(title),
+              "name": title
+                })
+         
 
 def search(request):
         searched = request.GET['q']
@@ -74,7 +82,7 @@ def create(request):
 def edit(request, title):
     if request.method == "GET":
         content = util.get_entry(title)
-        edit_form = EditEntryForm({"edit_title": title, "edit_content": content})
+        edit_form = EditEntryForm({"edit_content": content})
     
         return render(request, "encyclopedia/edit.html", {
              "form": edit_form,
@@ -83,7 +91,6 @@ def edit(request, title):
     else:
          edit_form = EditEntryForm(request.POST)
          if edit_form.is_valid():
-              title = edit_form.cleaned_data["edit_title"]
               content = edit_form.cleaned_data["edit_content"]
               util.save_entry(title, content)
               return HttpResponseRedirect(reverse("wiki:title", args=[title]))
@@ -91,4 +98,7 @@ def edit(request, title):
               return render(request, "encyclopedia/edit.html", {
                  "form": edit_form  
               })
-         
+
+def randomPage(request):
+     random_entry = random.choice(util.list_entries())
+     return HttpResponseRedirect(reverse("wiki:title", args=[random_entry]))
