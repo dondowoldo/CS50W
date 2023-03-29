@@ -1,0 +1,23 @@
+{% extends "encyclopedia/layout.html" %}
+
+{% block title %}
+    {% if searched %}
+        Search results for: {{ searched }}
+    {% else %}
+        Search criteria not entered.
+    {% endif %}
+{% endblock %}
+
+{% block body %}
+    {% if searched %}
+        <h1> No match found for : "{{ searched }}"</h1>
+        <h2> Listing entries containing your search criteria : </h2>
+        <ul>
+            {% for match in matches %}
+            <li><a href="{% url 'wiki:title' match %}">{{ match }}</a></li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <h1>No data entered.</h1>
+    {% endif %}
+{% endblock %}

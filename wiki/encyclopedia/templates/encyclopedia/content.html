@@ -1,0 +1,18 @@
+{% extends "encyclopedia/layout.html" %}
+
+{% block title %}
+    {% if not retrieve %}
+        Page Not Found
+    {% else %}
+        {{ name }}
+    {% endif %}
+{% endblock %}
+
+{% block body %}
+    {% if not retrieve %}
+        <h1>Error : Requested page wasn't found.</h1>
+    {% else %}
+        <a id="edit" href="{% url 'wiki:edit' name %}">Edit This page</a>
+        {{ retrieve | safe }}
+    {% endif %}
+{% endblock %}
