@@ -1,0 +1,99 @@
+# Lecture 2 - SQL, Models, and Migrations
+
+    1. django-admin startproject project_name (eg. airline)      ## to create django project
+    2. python manage.py startapp app_name (eg. flights)          ## create an app (one or more)
+    3. add the app in settings.py into installed apps
+    4. -> urls.py add from django.urls import include, path ()
+    5. update urlpatterns with a new path (eg. "flights/", include("flights.url"))
+    6. create models in models.py  eg.
+        class Flight(models.Model):
+            origin = models.CharField(max_length=64)                /// to be changed in the later stage
+            destination = models.CharField(max_length=64)
+            duration = models.IntegerField()
+
+            def __str__(self):          ## To be able to represent the flight as strings
+                return f"{self.id}: {self.origin} to {self.destination}"
+
+        class Airport(models.Model):
+            code = models.CharField(max_length=3)
+            city = models. CharField(max_length=64)
+
+            def __str__(self):
+            return f"{self.city} ({self.code})
+
+            // changes to the Flight model so we can connect both classes
+                    ## related name to access the relationship in reverse order (eg. how to get a flight that have related airport as origin)
+                    ## on_delete = what happens to the other entries if one gets deleted (CASCADE = delete related entries)
+            origin = models.ForeignKey(Airport, on_delete=models.CASCADE, related_name="departures")
+            destination = models.ForeignKey(Airport, on_delete=models.CASCADE, related_name="arrivals")
+
+    7. python manage.py makemigrations      ## create Migrations (Instructions to Django for how to manipulate the database to reflect the changes)
+    8. python manage.py migrate  ## to actually apply the Migrations
+    9. db.sqlite3 should be created now
+    10. python manage.py shell  ## We can run commands herae to apply commands that get executed on our application
+        from flights.models import Flight   ## Importing the Flight class from models file and now we can create a new flight
+        f = Flight(origin="New York",destination="London", duration=415)
+        f.save()        ## to save that flight that we just created
+
+        Flight.objects.all() ## Equivalent of flights select all //  If we want to query that flight
+                                // or flights.first()
+                                // we can also access all the flight properties eg. f.id / f.origin / f.destination etc..
+                                // or delete it as  :   f.delete()
+    11. Now we can create airports and flights like this : 
+            from flights.models import *
+            jfk = Airport(code="JFK", city="New York")
+            jfk.save()
+            lhr = Airport(code="LHR", city= "London")
+            lhr.save()
+            cdg = Airport(code="CDG", city="Paris")
+            cdg.save()
+            nrt = Airport(code="NRT", city="Tokyo")
+            nrt.save()
+            f = Flight(origin=jfk, destination=lhr, duration=415)
+            f.save()
+                            ## now we can query
+            f
+            f.origin
+            f.origin.city
+            f.origin.code
+            lhr.arrivals.all() 
+            ...
+    
+    12. add index urlpattern in urls.py
+    13. views.py
+            from .models import Flights
+
+            def index(request):
+            return render(request, "flights/index.html", {
+                "flights": Flight.objects.all()
+            })
+    
+    14. create templates
+    15. To display the list of flights, we can do the following:
+        <ul>
+            {% for flight in flights %}
+                <li>Flight {{ flight.id }}: {{ flight.origin }}: {{ fligh.destination }} </li>
+            {% endfor %}
+        </ul>
+
+            ## Airport.objects.filter(city="New York")  // Airport.objects.get(city="New York")  ## get will create exception if none or > 1 flt is avlbl
+    
+    We can avoid having to use Shell everytime by using Django admin page : 
+        python manage.py createsuperuser        ## to create an admin account
+        
+        We have to put our models into the admin app to be able to manipulate data using the admin app
+    --> go to admin.py
+            from .models import Flight, Airport
+
+            admin.site.register(Airport)
+            admin.site.register(Flight)
+
+        
+
+
+
+
+
+
+
+
