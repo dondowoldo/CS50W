@@ -8,8 +8,11 @@
                 {{ listing.name }} <br/>
                 {{ listing.description }} <br/>
                 ${{ listing.price }} <br/>
-                {{ listing.item}} <br/>
                 posted by : {{ listing.creator }}<br/>
+                highest bid by :
+                {% for bid in bids %}
+                {{ bid }}
+                {% endfor %}
                 <hr>
             {% endfor %}
         {% endif %}

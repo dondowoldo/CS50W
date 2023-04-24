@@ -11,6 +11,7 @@ def index(request):
     listings = Listing.objects.all()
     bids = Bid.objects.all()
     users = User.objects.all()
+
     return render(request, "auctions/index.html", {
         "listings": listings,
         "bids": bids,
