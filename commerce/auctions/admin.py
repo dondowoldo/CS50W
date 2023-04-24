@@ -12,7 +12,11 @@ class ListingAdmin(admin.ModelAdmin):
 class BidAdmin(admin.ModelAdmin):
     list_display = "bidder", "item", "price", "date_created"
 
+class CommentAdmin(admin.ModelAdmin):
+    list_display = "user", "listing", "comment", "timestamp"
+
 admin.site.register(User, UserAdmin)
 admin.site.register(Listing, ListingAdmin)
 admin.site.register(Bid, BidAdmin)
 admin.site.register(Category)
+admin.site.register(Comment, CommentAdmin)
