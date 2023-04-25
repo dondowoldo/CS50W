@@ -86,16 +86,10 @@ def create(request):
             "form": form,
         })
 
-## Helper function to get the higest amount bid on a particular item
-def highest_bid(all_bids):
-    bids = []
-    for bid in all_bids:
-        bids.append(bid.price)
-    return max(bids)
 
-
-## Returns a Bid object with highest amount bid on the item
+## Helper function to get the highest bidder. Returns a Bid object with highest amount bid on the item
 ## Access bidder id by "maxbid.first().bidder.id" // price by "maxbid.first().price"
+
 def max_bidder(all_bids):
     bids = []
     for bid in all_bids:
