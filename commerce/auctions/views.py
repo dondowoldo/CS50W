@@ -90,4 +90,4 @@ def create(request):
         return render(request,"auctions/create.html", {
             "form": form,
         })
-
+    
