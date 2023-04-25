@@ -18,8 +18,10 @@
                 <h5>No bids so far.</h5>
             {% elif bidcount == 1 %}
                 <h5>{{ bidcount }} bid so far.</h5>
+                <h5>{{ maxbidder }} is the max bidder with user id of: {{ maxbidder.id }}</h5>
             {% else %}
                 <h5>{{ bidcount }} bids so far.</h5>
+                <h5>{{ maxbidder }} is the max bidder with user id of: {{ maxbidder.id }}</h5>
             {% endif %}
         </div>
     </div>

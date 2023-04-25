@@ -86,6 +86,7 @@ def create(request):
             "form": form,
         })
 
+## Helper function to get the higest amount bid on a particular item
 def highest_bid(all_bids):
     bids = []
     for bid in all_bids:
@@ -93,19 +94,36 @@ def highest_bid(all_bids):
     return max(bids)
 
 
+## Returns a Bid object with highest amount bid on the item
+## Access bidder id by "maxbid.first().bidder.id" // price by "maxbid.first().price"
+def max_bidder(all_bids):
+    bids = []
+    for bid in all_bids:
+        bids.append(bid.price)
+    maxprice = max(bids)
+    maxbid = all_bids.filter(price=maxprice)
+    return maxbid       
+
+
+
 def listing_view(request, listing_id):
     listing = Listing.objects.get(id=listing_id)
     bids = Bid.objects.filter(item__id=listing_id)
-    bidcount = len(bids)
+    bidcount = len(bids)        ## Check how many bidders so far on particular item
     
+    ## If no bids , starting price in considered top price
     if not bids:
         maxprice = listing.price
+        maxbidder = None
     else:
-        maxprice = highest_bid(bids)
+        maxprice = max_bidder(bids)
+        maxbidder = maxprice.first().bidder
+        maxprice = maxprice.first().price
     
     return render(request,"auctions/listing.html", {
         "listing": listing,
         "bids": bids,
         "maxprice": maxprice,
-        "bidcount": bidcount
+        "bidcount": bidcount,
+        "maxbidder": maxbidder
     })
