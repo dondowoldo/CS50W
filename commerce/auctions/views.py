@@ -77,8 +77,10 @@ def create(request):
     submitted = False
     if request.method == "POST":
         form = CreateListing(request.POST)
-        if form.is_valid():
-            form.save()
+        if form.is_valid():            
+            complete_form = form.save(commit=False)       ## saves form but doesnt commit to db. Allows us to populate creator field with currently logged in
+            complete_form.creator = request.user
+            complete_form.save()
             submitted = True
             return render(request, "auctions/create.html", {
                 "submitted": submitted
@@ -86,6 +88,6 @@ def create(request):
     else:
         form = CreateListing()  
         return render(request,"auctions/create.html", {
-            "form": form
+            "form": form,
         })
 

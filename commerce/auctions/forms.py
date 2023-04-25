@@ -5,12 +5,12 @@ from django.forms import ModelForm
 class CreateListing(ModelForm):
     class Meta:
         model = Listing
-        fields = ("name", "price", "description", "imageurl", "category", "creator")
+        fields = ("name", "price", "description", "imageurl", "category")
         labels = {"name":'',
                 "price": '',
                 "description": '',
                 "imageurl": '',
-                "category": ''}
+                "category": 'Select at least one category. (To select multiple, hold CTRL)'}
         widgets = {
             "name": forms.TextInput(attrs={'class':'form-control', 'placeholder': 'Title'}),
             "price": forms.NumberInput(attrs={'class':'form-control', 'placeholder': 'Starting Bid'}),
