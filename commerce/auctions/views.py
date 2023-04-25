@@ -11,13 +11,8 @@ from .models import User, Listing, Bid
 
 def index(request):
     listings = Listing.objects.all()
-    bids = Bid.objects.all()
-    users = User.objects.all()
-
     return render(request, "auctions/index.html", {
-        "listings": listings,
-        "bids": bids,
-        "users": users
+        "listings": listings
     })
 
 
@@ -90,4 +85,27 @@ def create(request):
         return render(request,"auctions/create.html", {
             "form": form,
         })
+
+def highest_bid(all_bids):
+    bids = []
+    for bid in all_bids:
+        bids.append(bid.price)
+    return max(bids)
+
+
+def listing_view(request, listing_id):
+    listing = Listing.objects.get(id=listing_id)
+    bids = Bid.objects.filter(item__id=listing_id)
+    bidcount = len(bids)
     
+    if not bids:
+        maxprice = listing.price
+    else:
+        maxprice = highest_bid(bids)
+    
+    return render(request,"auctions/listing.html", {
+        "listing": listing,
+        "bids": bids,
+        "maxprice": maxprice,
+        "bidcount": bidcount
+    })

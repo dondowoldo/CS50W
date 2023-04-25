@@ -1,27 +1,32 @@
 {% extends "auctions/layout.html" %}
+{% load static %}
 
 {% block body %}
     <h2>Active Listings</h2>
         <hr>
         {% if listings %}
             {% for listing in listings %}
-                <div class="container">    
-                    <div class="imgsection">
-                        {% if listing.imageurl %}
-                            <img src="{{ listing.imageurl }}" width="300px" height="200px">
-                        {% else %}
-                            <img src="{{ 'static/auctions/noimage.jpg' }}" width="300px" height="200px">
-                        {% endif %}
+                <a class="listing" href="listing/{{ listing.id }}">
+                    <div class="container">    
+                        <div class="imgsection">
+                            {% if listing.imageurl %}
+                                <img src="{{ listing.imageurl }}" width="300px" height="200px">
+                            {% else %}
+                                <img src="{% static 'auctions/noimage.jpg' %}" width="300px" height="200px">
+                            {% endif %}
+                        </div>
+                        <div class="active_content">
+                            <h2>{{ listing.name }}</h2> <br/>
+                            <h4>Price: ${{ listing.price }}</h4> <br/>
+                            <h4>{{ listing.description }}</h4> <br/>
+                            <i>Posted by : {{ listing.creator }}</i><br/>
+                            <i>{{ listing.date_created }}</i><br/>
+                        </div>
                     </div>
-                    <div class="active_content">
-                        <h2>{{ listing.name }}</h2> <br/>
-                        <h4>Price: ${{ listing.price }}</h4> <br/>
-                        <h4>{{ listing.description }}</h4> <br/>
-                        <i>Posted by : {{ listing.creator }}</i><br/>
-                        <i>{{ listing.date_created }}</i><br/>
-                    </div>
-                </div>
+                </a>
                 <hr>
             {% endfor %}
+        {% else %}
+            <h2>No Active Listings</h2>
         {% endif %}      
 {% endblock %}

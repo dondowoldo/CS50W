@@ -1,0 +1,27 @@
+{% extends "auctions/layout.html" %}
+{% load static %}
+
+{% block body %}
+    <h2>Listing: {{ listing.name }}</h2>
+    <div class="active_container">
+        {% if listing.imageurl %}
+            <img src="{{ listing.imageurl }}" width="500px">
+        {% else %}
+            <img src="{% static 'auctions/noimage.jpg' %}" width="500px">
+        {% endif %}
+        <div class="active_listing">
+            <h4>{{ listing.description }}</h4> <br/>
+            <i>Posted by : {{ listing.creator }}</i><br/>
+            <i>{{ listing.date_created }}</i><br/>
+            <h3>Current Price: ${{ maxprice }}</h3>
+            {% if bidcount == 0 %}
+                <h5>No bids so far.</h5>
+            {% elif bidcount == 1 %}
+                <h5>{{ bidcount }} bid so far.</h5>
+            {% else %}
+                <h5>{{ bidcount }} bids so far.</h5>
+            {% endif %}
+        </div>
+    </div>
+
+{% endblock %}

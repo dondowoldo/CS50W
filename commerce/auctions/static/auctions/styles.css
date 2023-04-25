@@ -3,9 +3,14 @@ body {
 }
 
 .container {
+    padding: 10px;
     display: flex;
-
     margin: 20px;
+    width: 100%;
+}
+
+.container:hover {
+    background-color: rgb(255, 247, 210);
 }
 
 .imgsection {
@@ -14,15 +19,31 @@ body {
 
 .active_content {
     margin-top: 0px;
-    margin-left: 200px;
+    margin-left: 400px;
     flex: 1;
+}
+
+.active_listing {
+    padding: 50px;
+    margin-top: 0px;
+    margin-left: 400px;
+    flex: 1;
+}
+
+.active_container {
+    width: 100%;
+    background-color: aquamarine;
+    display: flex;
+    align-items: stretch;
 }
 
 i{
     color:darkgray;
 }
 
-h2, h4 {
-    margin: 0px;
-    padding: 0px;
-}
+
+
+.listing:link {text-decoration: none;}
+.listing:visited {text-decoration: none;}
+.listing:hover {text-decoration: none;}
+.listing:active {text-decoration: none;}
