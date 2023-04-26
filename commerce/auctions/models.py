@@ -28,7 +28,7 @@ class Bid(models.Model):
     bidder = models.ForeignKey(User, null=True, on_delete=models.CASCADE, related_name="bidder")
     item = models.ForeignKey(Listing, null=True, on_delete=models.CASCADE, related_name="item")
     date_created= models.DateTimeField(auto_now_add=True, null=True)
-    price = models.PositiveIntegerField(default=0)
+    price = models.PositiveIntegerField(blank=True)
 
     def __str__(self):
         return f"{self.bidder.username} : {self.item.name} : {self.price} : {self.date_created}"

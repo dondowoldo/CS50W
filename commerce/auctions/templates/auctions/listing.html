@@ -12,6 +12,18 @@
         <div class="active_listing">
             <h4>{{ listing.description }}</h4> <br/>
             <h3>Current Price: ${{ maxprice }}</h3>
+            {% if user.is_authenticated %}
+            <div class="form-group w-50">
+                <form action="" method="POST">
+                    {% csrf_token%}
+                    {{ bidarea }}    
+                    <input type="submit" value="Bid" class="btn btn-secondary">
+                </form>
+            </div>
+            {% else %}
+                <h4><i>You need to be logged in to bid on this item</i></h4>
+            {% endif %}
+
             {% if bidcount == 0 %}
                 <h5>No bids so far.</h5>
             {% elif bidcount == 1 %}
@@ -28,7 +40,13 @@
             <ul>
                 <li>Listed by : {{ listing.creator }}</li>
                 <li>Created on : {{ listing.date_created }}</li>
-                <li>Category : </li>
+                <li>Category : 
+                    <ul>
+                    {% for category in categories %}
+                        <li>{{ category }}</li>
+                    {% endfor %}
+                    </ul>
+                </li>
             </ul>    
         </div>
     </div>

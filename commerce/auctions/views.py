@@ -3,7 +3,7 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
-from .forms import CreateListing
+from .forms import CreateListing, PlaceBid
 from django.contrib.auth.decorators import login_required
 
 from .models import User, Listing, Bid, Category
@@ -98,32 +98,41 @@ def max_bidder(all_bids):
     maxbid = all_bids.filter(price=maxprice)
     return maxbid       
 
-# def list_categories(listing):                 ## todo
-#     if listing:
-#         categories = []
-#         for category i
-#     else:
-#         return None
+## Helper function to list all categories of particular item passed in from listing_view function
+def list_categories(listing):
+    if listing:
+        categories = []
+        listing = listing.category.all()
+        for category in listing:
+            categories.append(category)
+        return categories
+    else:
+        return None
+
 
 def listing_view(request, listing_id):
     listing = Listing.objects.get(id=listing_id)
-    #categories = list_categories(listing)              ## todo
+    categories = list_categories(listing)
     bids = Bid.objects.filter(item__id=listing_id)
     bidcount = len(bids)        ## Check how many bidders so far on particular item
+    bidarea = PlaceBid()
     
     ## If no bids , starting price in considered top price
     if not bids:
         maxprice = listing.price
         maxbidder = None
     else:
-        maxprice = max_bidder(bids)
-        maxbidder = maxprice.first().bidder
-        maxprice = maxprice.first().price
+        maxprice_set = max_bidder(bids)
+        maxbidder = maxprice_set.first().bidder
+        maxprice = maxprice_set.first().price
+    
     
     return render(request,"auctions/listing.html", {
         "listing": listing,
         "bids": bids,
         "maxprice": maxprice,
         "bidcount": bidcount,
-        "maxbidder": maxbidder
+        "maxbidder": maxbidder,
+        "categories": categories,
+        "bidarea": bidarea
     })

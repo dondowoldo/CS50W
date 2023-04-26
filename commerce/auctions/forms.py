@@ -1,4 +1,4 @@
-from .models import Listing, User
+from .models import Listing, User, Bid
 from django import forms
 from django.forms import ModelForm
 
@@ -17,4 +17,14 @@ class CreateListing(ModelForm):
             "description": forms.Textarea(attrs={'class':'form-control', 'placeholder': 'Describe your listing here', 'style':'resize:none;'}),
             "imageurl": forms.URLInput(attrs={'class':'form-control', 'placeholder': 'Paste Image URL here (Optional)'}),
             "category": forms.SelectMultiple(attrs={'class':'form-control'})
+        }
+
+class PlaceBid(ModelForm):
+    class Meta:
+        model = Bid
+        fields = ("price",)
+        labels = {"price": '',}
+        
+        widgets = {
+            "price": forms.NumberInput(attrs={'class':'form-control', 'placeholder':'Place Bid'})
         }
