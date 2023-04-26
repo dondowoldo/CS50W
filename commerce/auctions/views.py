@@ -108,14 +108,23 @@ def list_categories(listing):
         return categories
     else:
         return None
-
+    
+def place_bid(request, listing):
+    if request.method =="POST":
+        offer = PlaceBid(request.POST)
+        if offer.is_valid():
+            completebid = offer.save(commit=False)
+            completebid.bidder = request.user
+            completebid.item = listing
+            completebid.save()
+    return PlaceBid()
 
 def listing_view(request, listing_id):
     listing = Listing.objects.get(id=listing_id)
     categories = list_categories(listing)
+    bidarea = place_bid(request, listing)
     bids = Bid.objects.filter(item__id=listing_id)
     bidcount = len(bids)        ## Check how many bidders so far on particular item
-    bidarea = PlaceBid()
     
     ## If no bids , starting price in considered top price
     if not bids:
