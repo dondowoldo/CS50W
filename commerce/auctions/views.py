@@ -11,6 +11,7 @@ from .models import User, Listing, Bid, Category
 
 def index(request):
     listings = Listing.objects.all()
+    # (Listing.objects.all())[i].item.all(j)
     return render(request, "auctions/index.html", {
         "listings": listings
     })
