@@ -20,6 +20,10 @@ class CreateListing(ModelForm):
         }
 
 class PlaceBid(ModelForm):
+    def __init__(self, maxprice, *args, **kwargs):          ## passing in variable 'maxprice' from views
+        super().__init__(*args, **kwargs)                   ## in order to validate price
+        self.maxprice = maxprice
+
     class Meta:
         model = Bid
         fields = ("price",)
@@ -28,3 +32,12 @@ class PlaceBid(ModelForm):
         widgets = {
             "price": forms.NumberInput(attrs={'class':'form-control', 'placeholder':'Place Bid'})
         }
+
+    def clean_price(self):
+        bid = self.cleaned_data.get('price')      
+        if bid is None:
+            raise forms.ValidationError('You must enter an amount in order to bid.')
+        elif bid <= self.maxprice:
+            raise forms.ValidationError('Your bid needs to be higher than current amount')
+        return bid
+    

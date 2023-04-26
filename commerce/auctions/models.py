@@ -34,7 +34,6 @@ class Bid(models.Model):
         return f"{self.bidder.username} : {self.item.name} : {self.price} : {self.date_created}"
 
 
-    
 class Comment(models.Model):
     comment = models.TextField(max_length=150, null=True)
     user = models.ForeignKey(User, null=True, on_delete=models.CASCADE, related_name="user")

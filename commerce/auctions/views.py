@@ -109,23 +109,14 @@ def list_categories(listing):
     else:
         return None
     
-def place_bid(request, listing):
-    if request.method =="POST":
-        offer = PlaceBid(request.POST)
-        if offer.is_valid():
-            completebid = offer.save(commit=False)
-            completebid.bidder = request.user
-            completebid.item = listing
-            completebid.save()
-    return PlaceBid()
+
 
 def listing_view(request, listing_id):
     listing = Listing.objects.get(id=listing_id)
     categories = list_categories(listing)
-    bidarea = place_bid(request, listing)
     bids = Bid.objects.filter(item__id=listing_id)
     bidcount = len(bids)        ## Check how many bidders so far on particular item
-    
+
     ## If no bids , starting price in considered top price
     if not bids:
         maxprice = listing.price
@@ -135,13 +126,31 @@ def listing_view(request, listing_id):
         maxbidder = maxprice_set.first().bidder
         maxprice = maxprice_set.first().price
     
-    
-    return render(request,"auctions/listing.html", {
-        "listing": listing,
-        "bids": bids,
-        "maxprice": maxprice,
-        "bidcount": bidcount,
-        "maxbidder": maxbidder,
-        "categories": categories,
-        "bidarea": bidarea
-    })
+    if request.method=="POST":
+        offer = PlaceBid(maxprice, request.POST)
+        if offer.is_valid():
+            completebid = offer.save(commit=False)
+            completebid.bidder = request.user
+            completebid.item = listing
+            completebid.save()
+            return HttpResponseRedirect(reverse("listing", args=[listing.id]))
+        else:
+            return render(request, "auctions/listing.html", {
+                "offer": offer,
+                "listing": listing,
+                "bids": bids,
+                "maxprice": maxprice,
+                "bidcount": bidcount,
+                "maxbidder": maxbidder,
+                "categories": categories,
+                })
+    else:
+        return render(request, "auctions/listing.html", {
+            "offer": PlaceBid(maxprice),
+            "listing": listing,
+            "bids": bids,
+            "maxprice": maxprice,
+            "bidcount": bidcount,
+            "maxbidder": maxbidder,
+            "categories": categories,
+            })
