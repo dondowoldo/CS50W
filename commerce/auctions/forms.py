@@ -10,11 +10,11 @@ class CreateListing(ModelForm):
                 "price": '',
                 "description": '',
                 "imageurl": '',
-                "category": 'Select at least one category. (To select multiple, hold CTRL)'}
+                "category": 'Select a category.(Optional), Hold down CTRL to select more than one'}
         widgets = {
             "name": forms.TextInput(attrs={'class':'form-control', 'placeholder': 'Title'}),
             "price": forms.NumberInput(attrs={'class':'form-control', 'placeholder': 'Starting Bid'}),
             "description": forms.Textarea(attrs={'class':'form-control', 'placeholder': 'Describe your listing here', 'style':'resize:none;'}),
-            "imageurl": forms.URLInput(attrs={'class':'form-control', 'placeholder': 'Paste Image URL here (optional)'}),
+            "imageurl": forms.URLInput(attrs={'class':'form-control', 'placeholder': 'Paste Image URL here (Optional)'}),
             "category": forms.SelectMultiple(attrs={'class':'form-control'})
         }

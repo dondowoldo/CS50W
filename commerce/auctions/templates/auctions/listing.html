@@ -11,8 +11,6 @@
         {% endif %}
         <div class="active_listing">
             <h4>{{ listing.description }}</h4> <br/>
-            <i>Posted by : {{ listing.creator }}</i><br/>
-            <i>{{ listing.date_created }}</i><br/>
             <h3>Current Price: ${{ maxprice }}</h3>
             {% if bidcount == 0 %}
                 <h5>No bids so far.</h5>
@@ -23,6 +21,15 @@
                 <h5>{{ bidcount }} bids so far.</h5>
                 <h5>{{ maxbidder }} is the max bidder with user id of: {{ maxbidder.id }}</h5>
             {% endif %}
+            {% if user.id == maxbidder.id %}
+                <h2>You are the highest bidder!</h2>
+            {% endif %}
+            <h4>Details: </h4>
+            <ul>
+                <li>Listed by : {{ listing.creator }}</li>
+                <li>Created on : {{ listing.date_created }}</li>
+                <li>Category : </li>
+            </ul>    
         </div>
     </div>
 

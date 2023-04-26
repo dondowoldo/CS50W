@@ -6,7 +6,7 @@ from django.urls import reverse
 from .forms import CreateListing
 from django.contrib.auth.decorators import login_required
 
-from .models import User, Listing, Bid
+from .models import User, Listing, Bid, Category
 
 
 def index(request):
@@ -98,10 +98,16 @@ def max_bidder(all_bids):
     maxbid = all_bids.filter(price=maxprice)
     return maxbid       
 
-
+# def list_categories(listing):                 ## todo
+#     if listing:
+#         categories = []
+#         for category i
+#     else:
+#         return None
 
 def listing_view(request, listing_id):
     listing = Listing.objects.get(id=listing_id)
+    #categories = list_categories(listing)              ## todo
     bids = Bid.objects.filter(item__id=listing_id)
     bidcount = len(bids)        ## Check how many bidders so far on particular item
     
