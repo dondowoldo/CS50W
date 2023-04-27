@@ -12,20 +12,26 @@
         <div class="active_listing">
             <h4>{{ listing.description }}</h4> <br/>
             <h3>Current Price: ${{ maxprice|floatformat:2 }}</h3>
-            {% if user.is_authenticated %}
-                {% if user.id == listing.creator.id %}
-                    {{ none }}
+            {% if listing.active %}
+                {% if user.is_authenticated %}
+                    {% if user.id == listing.creator.id %}
+                        {{ none }}
+                    {% else %}
+                        <div class="form-group w-50">
+                            <form action="" method="POST">
+                                {% csrf_token %}
+                                {{ offer }}    
+                                <input type="submit" value="Bid" class="btn btn-secondary">
+                            </form>
+                        </div>
+                    {% endif %}
                 {% else %}
-                    <div class="form-group w-50">
-                        <form action="" method="POST">
-                            {% csrf_token %}
-                            {{ offer }}    
-                            <input type="submit" value="Bid" class="btn btn-secondary">
-                        </form>
-                    </div>
+                    <h4><i>You need to be logged in to bid on this item</i></h4>
                 {% endif %}
+            {% elif not listing.active and maxbidder.id == user.id %}
+                <h2>Congratulations{% if user.first_name %} {{ user.first_name }}{% endif %}, You have won the auction!</h2>
             {% else %}
-                <h4><i>You need to be logged in to bid on this item</i></h4>
+                <h2>Sorry, this auction has ended</h2>
             {% endif %}
 
             {% if bidcount == 0 %}
