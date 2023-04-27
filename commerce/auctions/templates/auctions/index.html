@@ -18,9 +18,11 @@
                         <div class="active_content">
                             <h2>{{ listing.name }}</h2> <br/>
                             <h4>Price: 
+                                {%for prices in listing.item.all %}
+                                ${{ prices.price }}
+                                {% endfor %}
                                 
-                                ${{ listing.item.all }}</h4> <br/>
-
+                            </h4> <br/>
 
                             <h4>{{ listing.description }}</h4> <br/>
                             <i>Posted by : {{ listing.creator }}</i><br/>
