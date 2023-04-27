@@ -7,7 +7,7 @@ class UserAdmin(admin.ModelAdmin):
     list_display = "id", "username", "first_name", "last_name", "email","date_joined", "is_staff"
 
 class ListingAdmin(admin.ModelAdmin):
-    list_display = "id", "creator", "name", "price", "date_created"
+    list_display = "id", "name", "creator", "price", "active", "date_created"
 
 class BidAdmin(admin.ModelAdmin):
     list_display = "bidder", "item", "price", "date_created"

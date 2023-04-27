@@ -19,9 +19,9 @@
                             <h2>{{ listing.name }}</h2> <br/>
                             <h4>Price:
                                 {% if not listing.item.last.price %}
-                                    ${{ listing.price }}
+                                    ${{ listing.price|floatformat:2 }}
                                 {% else %}
-                                    ${{ listing.item.last.price }}
+                                    ${{ listing.item.last.price|floatformat:2 }}
                                 {% endif %}
                             </h4> <br/>
 
