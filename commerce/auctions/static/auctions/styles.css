@@ -1,0 +1,49 @@
+body {
+    padding: 10px;
+}
+
+.container {
+    padding: 10px;
+    display: flex;
+    margin: 20px;
+    width: 100%;
+}
+
+.container:hover {
+    background-color: rgb(255, 247, 210);
+}
+
+.imgsection {
+    width:200px;
+}
+
+.active_content {
+    margin-top: 0px;
+    margin-left: 400px;
+    flex: 1;
+}
+
+.active_listing {
+    padding: 50px;
+    margin-top: 0px;
+    margin-left: 400px;
+    flex: 1;
+}
+
+.active_container {
+    width: 100%;
+    background-color: aquamarine;
+    display: flex;
+    align-items: stretch;
+}
+
+i{
+    color:darkgray;
+}
+
+
+
+.listing:link {text-decoration: none;}
+.listing:visited {text-decoration: none;}
+.listing:hover {text-decoration: none;}
+.listing:active {text-decoration: none;}
