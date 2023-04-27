@@ -81,6 +81,10 @@ def create(request):
             return render(request, "auctions/create.html", {
                 "submitted": submitted
             })
+        else:
+            return render(request, "auctions/create.html",{
+                "form": form
+            })
     else:
         form = CreateListing()  
         return render(request,"auctions/create.html", {
