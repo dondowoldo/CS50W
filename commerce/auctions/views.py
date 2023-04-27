@@ -81,6 +81,10 @@ def create(request):
             return render(request, "auctions/create.html", {
                 "submitted": submitted
             })
+        else:
+            return render(request, "auctions/create.html",{
+                "form": form
+            })
     else:
         form = CreateListing()  
         return render(request,"auctions/create.html", {
@@ -120,7 +124,7 @@ def listing_view(request, listing_id):
 
     ## If no bids , starting price in considered top price
     if not bids:
-        maxprice = listing.price
+        maxprice = None
         maxbidder = None
     else:
         maxprice_set = max_bidder(bids)
@@ -128,7 +132,7 @@ def listing_view(request, listing_id):
         maxprice = maxprice_set.first().price
     
     if request.method=="POST":
-        offer = PlaceBid(maxprice, request.POST)
+        offer = PlaceBid(maxprice, listing, request.POST)
         if offer.is_valid():
             completebid = offer.save(commit=False)
             completebid.bidder = request.user
@@ -147,7 +151,7 @@ def listing_view(request, listing_id):
                 })
     else:
         return render(request, "auctions/listing.html", {
-            "offer": PlaceBid(maxprice),
+            "offer": PlaceBid(maxprice, listing),
             "listing": listing,
             "bids": bids,
             "maxprice": maxprice,

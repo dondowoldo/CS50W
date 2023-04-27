@@ -18,11 +18,18 @@ class CreateListing(ModelForm):
             "imageurl": forms.URLInput(attrs={'class':'form-control', 'placeholder': 'Paste Image URL here (Optional)'}),
             "category": forms.SelectMultiple(attrs={'class':'form-control'})
         }
+    
+    def clean_price(self):
+        price = self.cleaned_data.get("price")
+        if price <= 0:
+            raise forms.ValidationError("Starting bid has to be more than 0")
+        return price
 
 class PlaceBid(ModelForm):
-    def __init__(self, maxprice, *args, **kwargs):          ## passing in variable 'maxprice' from views
+    def __init__(self, maxprice, listing, *args, **kwargs):          ## passing in variable 'maxprice' from views
         super().__init__(*args, **kwargs)                   ## in order to validate price
         self.maxprice = maxprice
+        self.listing = listing
 
     class Meta:
         model = Bid
@@ -37,7 +44,11 @@ class PlaceBid(ModelForm):
         bid = self.cleaned_data.get('price')      
         if bid is None:
             raise forms.ValidationError('You must enter an amount in order to bid.')
-        elif bid <= self.maxprice:
-            raise forms.ValidationError('Your bid needs to be higher than current amount')
+        if self.maxprice is not None:
+            if bid <= self.maxprice:
+                raise forms.ValidationError('Your bid needs to be higher than current amount')
+        else:
+            if bid < self.listing.price:
+                raise forms.ValidationError("Your bid must be equal or higher than asking price.")
         return bid
     
