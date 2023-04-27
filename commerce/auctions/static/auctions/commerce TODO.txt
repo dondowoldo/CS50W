@@ -1,3 +1,0 @@
-restrict price to 2 decimal places
-sort out images (urlfield instead of charfield)
-
