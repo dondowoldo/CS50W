@@ -13,13 +13,17 @@
             <h4>{{ listing.description }}</h4> <br/>
             <h3>Current Price: ${{ maxprice|floatformat:2 }}</h3>
             {% if user.is_authenticated %}
-            <div class="form-group w-50">
-                <form action="" method="POST">
-                    {% csrf_token%}
-                    {{ offer }}    
-                    <input type="submit" value="Bid" class="btn btn-secondary">
-                </form>
-            </div>
+                {% if user.id == listing.creator.id %}
+                    {{ none }}
+                {% else %}
+                    <div class="form-group w-50">
+                        <form action="" method="POST">
+                            {% csrf_token %}
+                            {{ offer }}    
+                            <input type="submit" value="Bid" class="btn btn-secondary">
+                        </form>
+                    </div>
+                {% endif %}
             {% else %}
                 <h4><i>You need to be logged in to bid on this item</i></h4>
             {% endif %}
