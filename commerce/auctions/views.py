@@ -132,23 +132,30 @@ def listing_view(request, listing_id):
         maxprice = maxprice_set.first().price
     
     if request.method=="POST":
-        offer = PlaceBid(maxprice, listing, request.POST)
-        if offer.is_valid():
-            completebid = offer.save(commit=False)
-            completebid.bidder = request.user
-            completebid.item = listing
-            completebid.save()
-            return HttpResponseRedirect(reverse("listing", args=[listing.id]))
-        else:
-            return render(request, "auctions/listing.html", {
-                "offer": offer,
-                "listing": listing,
-                "bids": bids,
-                "maxprice": maxprice,
-                "bidcount": bidcount,
-                "maxbidder": maxbidder,
-                "categories": categories,
-                })
+        print(request.POST)
+        if request.POST.get("place_bid"):
+            offer = PlaceBid(maxprice, listing, request.POST)
+            if offer.is_valid():
+                completebid = offer.save(commit=False)
+                completebid.bidder = request.user
+                completebid.item = listing
+                completebid.save()
+                return HttpResponseRedirect(reverse("listing", args=[listing.id]))
+            else:
+                return render(request, "auctions/listing.html", {
+                    "offer": offer,
+                    "listing": listing,
+                    "bids": bids,
+                    "maxprice": maxprice,
+                    "bidcount": bidcount,
+                    "maxbidder": maxbidder,
+                    "categories": categories,
+                    })
+            
+        if request.POST.get("close_bid"):
+            listing.active = False
+            listing.save()
+            return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "auctions/listing.html", {
             "offer": PlaceBid(maxprice, listing),
@@ -159,3 +166,9 @@ def listing_view(request, listing_id):
             "maxbidder": maxbidder,
             "categories": categories,
             })
+        
+def closed_view(request):
+    closed_listings = Listing.objects.filter(active=False)
+    return render(request, "auctions/closed.html", {
+        "closed_listings": closed_listings
+    })

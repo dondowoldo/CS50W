@@ -9,7 +9,7 @@ class CreateListing(ModelForm):
         labels = {"name":'',
                 "price": '',
                 "description": '',
-                "imageurl": '',
+                "imageurl": '', 
                 "category": 'Select a category.(Optional), Hold down CTRL to select more than one'}
         widgets = {
             "name": forms.TextInput(attrs={'class':'form-control', 'placeholder': 'Title'}),

@@ -11,41 +11,54 @@
         {% endif %}
         <div class="active_listing">
             <h4>{{ listing.description }}</h4> <br/>
-            <h3>Current Price: {% if maxprice %}${{ maxprice|floatformat:2 }} {% else %} ${{ listing.price|floatformat:2 }}{% endif %}</h3>
+            <h3>Price: {% if maxprice %}${{ maxprice|floatformat:2 }} {% else %} ${{ listing.price|floatformat:2 }}{% endif %}</h3>
             {% if listing.active %}
                 {% if user.is_authenticated %}
                     {% if user.id == listing.creator.id %}
-                        {{ none }}
+                        <div class="form-group w-50">
+                            <form action="" method="POST">
+                                {% csrf_token %}
+                                <input type="submit" value="Close auction" name="close_bid" class="btn btn-secondary">
+                            </form>
+                        </div>
+                        {{ close }}
                     {% else %}
                         <div class="form-group w-50">
                             <form action="" method="POST">
                                 {% csrf_token %}
                                 {{ offer }}    
-                                <input type="submit" value="Bid" class="btn btn-secondary">
+                                <input type="submit" value="Bid" name="place_bid" class="btn btn-secondary">
                             </form>
                         </div>
                     {% endif %}
                 {% else %}
                     <h4><i>You need to be logged in to bid on this item</i></h4>
                 {% endif %}
-            {% elif not listing.active and maxbidder.id == user.id %}
-                <h2>Congratulations{% if user.first_name %} {{ user.first_name }}{% endif %}, You have won the auction!</h2>
-            {% else %}
-                <h2>Sorry, this auction has ended</h2>
+            {% endif %}
+            
+            {% if not listing.active and user.is_authenticated and maxbidder.id != user.id %}
+                <h2>This auction has ended</h2>
+            {% elif not listing.active and not user.is_authenticated %}
+                <h2>This auction has ended. If you bid on this item, please log-in to see if you won.</h2>
+            {% elif not listing.active and maxbidder.id == user.id and user.is_authenticated %}
+                <h2>Congratulations{% if user.first_name %} {{ user.first_name }}{% endif %}, You have won the auction!</h2>   
             {% endif %}
 
-            {% if bidcount == 0 %}
+            {% if bidcount == 0 and listing.active %}
                 <h5>No bids so far.</h5>
-            {% elif bidcount == 1 %}
+            {% elif bidcount == 1 and listing.active %}
                 <h5>{{ bidcount }} bid so far.</h5>
-                <h5>{{ maxbidder }} is the max bidder with user id of: {{ maxbidder.id }}</h5>
-            {% else %}
+                <h5>{{ maxbidder }} is the current auction leader.</h5>
+            {% elif bidcount == 0 and not listing.active %}
+                <h5>This item hasn't been sold.</h5>
+            {% elif bidcount != 0 and listing.active %}
                 <h5>{{ bidcount }} bids so far.</h5>
-                <h5>{{ maxbidder }} is the max bidder with user id of: {{ maxbidder.id }}</h5>
-            {% endif %}
-            {% if user.id == maxbidder.id %}
+                <h5>{{ maxbidder }} is the current auction leader.</h5>
+            {% elif user.id == maxbidder.id and listing.active == true %}
+                <h5>{{ bidcount }} bids so far.</h5>
                 <h2>You are the highest bidder!</h2>
             {% endif %}
+            
             <h4>Details: </h4>
             <ul>
                 <li>Listed by : {{ listing.creator }}</li>
