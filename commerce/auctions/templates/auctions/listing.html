@@ -35,7 +35,22 @@
                     <h4><i>You need to be logged in to bid on this item</i></h4>
                 {% endif %}
             {% endif %}
-            
+            {% if user.is_authenticated and request.user not in listing.watchlist.all %}
+                <div class="form-group w-50">
+                    <form action="" method="POST">
+                        {% csrf_token %}
+                        <input type="submit" value="Add to Watchlist" name="watch_item" class="btn btn-secondary">
+                    </form>
+                </div>
+            {% elif user.is_authenticated and request.user in listing.watchlist.all %}
+                <div class="form-group w-50">
+                    <form action="" method="POST">
+                        {% csrf_token %}
+                        <input type="submit" value="Remove from Watchlist" name="unwatch_item" class="btn btn-secondary">
+                    </form>
+                </div>
+            {% endif %}
+
             {% if not listing.active and user.is_authenticated and maxbidder.id != user.id %}
                 <h2>This auction has ended</h2>
             {% elif not listing.active and not user.is_authenticated %}

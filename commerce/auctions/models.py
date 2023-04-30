@@ -13,6 +13,7 @@ class Category(models.Model):
         return f"{self.name}"
 
 class Listing(models.Model):
+    watchlist = models.ManyToManyField(User, blank=True, related_name="watching")
     creator = models.ForeignKey(User, null=True, on_delete=models.CASCADE, related_name="created")
     name = models.CharField(max_length=100)
     price = models.FloatField()

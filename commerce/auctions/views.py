@@ -156,6 +156,14 @@ def listing_view(request, listing_id):
             listing.active = False
             listing.save()
             return HttpResponseRedirect(reverse("index"))
+        
+        if request.POST.get("watch_item"):
+            listing.watchlist.add(request.user)
+            return HttpResponseRedirect(reverse("index"))
+        
+        if request.POST.get("unwatch_item"):
+            listing.watchlist.remove(request.user)
+            return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "auctions/listing.html", {
             "offer": PlaceBid(maxprice, listing),
@@ -171,4 +179,10 @@ def closed_view(request):
     closed_listings = Listing.objects.filter(active=False)
     return render(request, "auctions/closed.html", {
         "closed_listings": closed_listings
+    })
+
+def watchlist(request):
+    watchlist = Listing.objects.filter(watchlist__id = request.user.id)
+    return render(request, "auctions/watchlist.html", {
+        "watchlist": watchlist
     })
