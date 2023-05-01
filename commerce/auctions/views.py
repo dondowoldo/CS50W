@@ -3,10 +3,10 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
-from .forms import CreateListing, PlaceBid
+from .forms import CreateListing, PlaceBid, PostComment
 from django.contrib.auth.decorators import login_required
 
-from .models import User, Listing, Bid, Category
+from .models import User, Listing, Bid, Category, Comment
 
 
 def index(request):
@@ -119,6 +119,7 @@ def list_categories(listing):
 def listing_view(request, listing_id):
     listing = Listing.objects.get(id=listing_id)
     categories = list_categories(listing)
+    comments = Comment.objects.filter(listing=listing).order_by("-timestamp")
     bids = Bid.objects.filter(item__id=listing_id)
     bidcount = len(bids)        ## Check how many bidders so far on particular item
 
@@ -132,7 +133,6 @@ def listing_view(request, listing_id):
         maxprice = maxprice_set.first().price
     
     if request.method=="POST":
-        print(request.POST)
         if request.POST.get("place_bid"):
             offer = PlaceBid(maxprice, listing, request.POST)
             if offer.is_valid():
@@ -143,6 +143,7 @@ def listing_view(request, listing_id):
                 return HttpResponseRedirect(reverse("listing", args=[listing.id]))
             else:
                 return render(request, "auctions/listing.html", {
+                    "comments": comments,
                     "offer": offer,
                     "listing": listing,
                     "bids": bids,
@@ -151,7 +152,27 @@ def listing_view(request, listing_id):
                     "maxbidder": maxbidder,
                     "categories": categories,
                     })
-            
+        if request.POST.get("sub_comment"):
+            comment = PostComment(request.POST)
+            if comment.is_valid():
+                completecomment = comment.save(commit=False)
+                completecomment.user = request.user
+                completecomment.listing = listing
+                completecomment.save()
+                return HttpResponseRedirect(reverse("listing", args=[listing.id]))
+            else:
+                return render(request, "auctions/listing.html", {
+                    "comment_form": PostComment(request.POST),
+                    "comments": comments,
+                    "offer": offer,
+                    "listing": listing,
+                    "bids": bids,
+                    "maxprice": maxprice,
+                    "bidcount": bidcount,
+                    "maxbidder": maxbidder,
+                    "categories": categories,
+                    })
+
         if request.POST.get("close_bid"):
             listing.active = False
             listing.save()
@@ -166,7 +187,9 @@ def listing_view(request, listing_id):
             return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "auctions/listing.html", {
+            "comment_form": PostComment(),
             "offer": PlaceBid(maxprice, listing),
+            "comments": comments,
             "listing": listing,
             "bids": bids,
             "maxprice": maxprice,

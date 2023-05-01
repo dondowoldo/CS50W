@@ -85,7 +85,22 @@
                     {% endfor %}
                     </ul>
                 </li>
-            </ul>    
+            </ul>
+            {% if user.is_authenticated %}
+                <div class="form-group w-100">
+                    <form action="" method="POST">
+                        {% csrf_token %}
+                        {{ comment_form }}
+                        <input type="submit" value="Submit comment" name="sub_comment" class="btn btn-secondary">
+                    </form>
+                </div>
+            {% endif %}
+
+            {% for entry in comments %}
+                <b>{{ entry.user.username }}</b> |
+                {{ entry.comment }} <br/>
+                <i>{{ entry.timestamp|timesince }} ago</i><hr>
+            {% endfor %}   
         </div>
     </div>
 

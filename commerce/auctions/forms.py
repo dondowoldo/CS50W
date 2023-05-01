@@ -1,4 +1,4 @@
-from .models import Listing, User, Bid
+from .models import Listing, User, Bid, Comment
 from django import forms
 from django.forms import ModelForm
 
@@ -51,4 +51,12 @@ class PlaceBid(ModelForm):
             if bid < self.listing.price:
                 raise forms.ValidationError("Your bid must be equal or higher than asking price.")
         return bid
-    
+
+class PostComment(ModelForm):
+    class Meta:
+        model = Comment
+        fields = ("comment",)
+        labels = {"comment": '',}
+        widgets = {
+            "comment": forms.Textarea(attrs={'class':'form-control', 'placeholder': 'Write your comment here...', 'style':'resize:none;'}),
+            }

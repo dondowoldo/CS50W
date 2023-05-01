@@ -37,7 +37,7 @@ class Bid(models.Model):
 
 
 class Comment(models.Model):
-    comment = models.TextField(max_length=150, null=True)
+    comment = models.TextField(max_length=300, null=True)
     user = models.ForeignKey(User, null=True, on_delete=models.CASCADE, related_name="user")
     listing = models.ForeignKey(Listing, null=True, on_delete=models.CASCADE, related_name="listing")
     timestamp = models.DateTimeField(auto_now_add=True, null=True)
