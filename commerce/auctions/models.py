@@ -13,6 +13,7 @@ class Category(models.Model):
         return f"{self.name}"
 
 class Listing(models.Model):
+    watchlist = models.ManyToManyField(User, blank=True, related_name="watching")
     creator = models.ForeignKey(User, null=True, on_delete=models.CASCADE, related_name="created")
     name = models.CharField(max_length=100)
     price = models.FloatField()
@@ -36,7 +37,7 @@ class Bid(models.Model):
 
 
 class Comment(models.Model):
-    comment = models.TextField(max_length=150, null=True)
+    comment = models.TextField(max_length=300, null=True)
     user = models.ForeignKey(User, null=True, on_delete=models.CASCADE, related_name="user")
     listing = models.ForeignKey(Listing, null=True, on_delete=models.CASCADE, related_name="listing")
     timestamp = models.DateTimeField(auto_now_add=True, null=True)

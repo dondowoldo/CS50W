@@ -3,10 +3,10 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
-from .forms import CreateListing, PlaceBid
+from .forms import CreateListing, PlaceBid, PostComment
 from django.contrib.auth.decorators import login_required
 
-from .models import User, Listing, Bid, Category
+from .models import User, Listing, Bid, Category, Comment
 
 
 def index(request):
@@ -119,6 +119,7 @@ def list_categories(listing):
 def listing_view(request, listing_id):
     listing = Listing.objects.get(id=listing_id)
     categories = list_categories(listing)
+    comments = Comment.objects.filter(listing=listing).order_by("-timestamp")
     bids = Bid.objects.filter(item__id=listing_id)
     bidcount = len(bids)        ## Check how many bidders so far on particular item
 
@@ -132,26 +133,63 @@ def listing_view(request, listing_id):
         maxprice = maxprice_set.first().price
     
     if request.method=="POST":
-        offer = PlaceBid(maxprice, listing, request.POST)
-        if offer.is_valid():
-            completebid = offer.save(commit=False)
-            completebid.bidder = request.user
-            completebid.item = listing
-            completebid.save()
-            return HttpResponseRedirect(reverse("listing", args=[listing.id]))
-        else:
-            return render(request, "auctions/listing.html", {
-                "offer": offer,
-                "listing": listing,
-                "bids": bids,
-                "maxprice": maxprice,
-                "bidcount": bidcount,
-                "maxbidder": maxbidder,
-                "categories": categories,
-                })
+        if request.POST.get("place_bid"):
+            offer = PlaceBid(maxprice, listing, request.POST)
+            if offer.is_valid():
+                completebid = offer.save(commit=False)
+                completebid.bidder = request.user
+                completebid.item = listing
+                completebid.save()
+                return HttpResponseRedirect(reverse("listing", args=[listing.id]))
+            else:
+                return render(request, "auctions/listing.html", {
+                    "comments": comments,
+                    "offer": offer,
+                    "listing": listing,
+                    "bids": bids,
+                    "maxprice": maxprice,
+                    "bidcount": bidcount,
+                    "maxbidder": maxbidder,
+                    "categories": categories,
+                    })
+        if request.POST.get("sub_comment"):
+            comment = PostComment(request.POST)
+            if comment.is_valid():
+                completecomment = comment.save(commit=False)
+                completecomment.user = request.user
+                completecomment.listing = listing
+                completecomment.save()
+                return HttpResponseRedirect(reverse("listing", args=[listing.id]))
+            else:
+                return render(request, "auctions/listing.html", {
+                    "comment_form": PostComment(request.POST),
+                    "comments": comments,
+                    "offer": offer,
+                    "listing": listing,
+                    "bids": bids,
+                    "maxprice": maxprice,
+                    "bidcount": bidcount,
+                    "maxbidder": maxbidder,
+                    "categories": categories,
+                    })
+
+        if request.POST.get("close_bid"):
+            listing.active = False
+            listing.save()
+            return HttpResponseRedirect(reverse("index"))
+        
+        if request.POST.get("watch_item"):
+            listing.watchlist.add(request.user)
+            return HttpResponseRedirect(reverse("index"))
+        
+        if request.POST.get("unwatch_item"):
+            listing.watchlist.remove(request.user)
+            return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "auctions/listing.html", {
+            "comment_form": PostComment(),
             "offer": PlaceBid(maxprice, listing),
+            "comments": comments,
             "listing": listing,
             "bids": bids,
             "maxprice": maxprice,
@@ -159,3 +197,15 @@ def listing_view(request, listing_id):
             "maxbidder": maxbidder,
             "categories": categories,
             })
+        
+def closed_view(request):
+    closed_listings = Listing.objects.filter(active=False)
+    return render(request, "auctions/closed.html", {
+        "closed_listings": closed_listings
+    })
+
+def watchlist(request):
+    watchlist = Listing.objects.filter(watchlist__id = request.user.id)
+    return render(request, "auctions/watchlist.html", {
+        "watchlist": watchlist
+    })
