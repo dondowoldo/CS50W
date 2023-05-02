@@ -1,0 +1,41 @@
+{% extends "auctions/layout.html" %}
+{% load static %}
+
+{% block body %}
+    <h2>Active Listing in categories: </h2><hr>
+        {% if not listings %}
+            <h2>No Active Listings in selected categories. </h2>
+        {% else %}
+            {% for listing in listings %}
+                {% if listing.active %}
+                    <a class="listing" href="listing/{{ listing.id }}">
+                        <div class="container">    
+                            <div class="imgsection">
+                                {% if listing.imageurl %}
+                                    <img src="{{ listing.imageurl }}" width="300px" height="200px">
+                                {% else %}
+                                    <img src="{% static 'auctions/noimage.jpg' %}" width="300px" height="200px">
+                                {% endif %}
+                            </div>
+                            <div class="active_content">
+                                <h2>{{ listing.name }}</h2> <br/>
+                                <h4>Price:
+                                    {% if not listing.item.last.price %}
+                                        ${{ listing.price|floatformat:2 }}
+                                    {% else %}
+                                        ${{ listing.item.last.price|floatformat:2 }}
+                                    {% endif %}
+                                </h4> <br/>
+
+                                <h4>{{ listing.description }}</h4> <br/>
+                                <i>Posted by : {{ listing.creator }}</i><br/>
+                                <i>{{ listing.date_created }}</i><br/>
+                            </div>
+                        </div>
+                    </a>
+                    <hr>
+                {% endif %}
+            {% endfor %}
+        
+        {% endif %}      
+{% endblock %}
