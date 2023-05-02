@@ -2,11 +2,11 @@
 {% load static %}
 
 {% block body %}
-    <h2>Active Listings</h2><hr>
-        {% if not listings %}
-            <h2>No Active Listings</h2>
+        {% if not filtered_listings %}
+            <h2>No Active Listings in category : {{ category }}</h2>
         {% else %}
-            {% for listing in listings %}
+            <h2>Active Listings in category: {{ category }} </h2><hr>
+            {% for listing in filtered_listings %}
                 {% if listing.active %}
                     <a class="listing" href="{% url 'listing' listing.id %}">
                         <div class="container">    

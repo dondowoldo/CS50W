@@ -1,4 +1,4 @@
-from .models import Listing, User, Bid, Comment
+from .models import Listing, Bid, Comment, Category
 from django import forms
 from django.forms import ModelForm
 
@@ -60,3 +60,13 @@ class PostComment(ModelForm):
         widgets = {
             "comment": forms.Textarea(attrs={'class':'form-control', 'placeholder': 'Write your comment here...', 'style':'resize:none;'}),
             }
+
+
+class SelectCategory(ModelForm):
+    class Meta:
+        model = Listing
+        fields = ("category",)
+        labels = {"name": "Select Category: ",}
+        widgets = {
+            "category": forms.SelectMultiple(attrs={'class':'form-control'})
+        }

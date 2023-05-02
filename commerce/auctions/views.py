@@ -3,7 +3,7 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
-from .forms import CreateListing, PlaceBid, PostComment
+from .forms import CreateListing, PlaceBid, PostComment, SelectCategory
 from django.contrib.auth.decorators import login_required
 
 from .models import User, Listing, Bid, Category, Comment
@@ -212,5 +212,13 @@ def watchlist(request):
 
 def category_view(request):
     return render(request, "auctions/categories.html", {
-        
-    })
+        "categories": Category.objects.all()
+        })
+
+def category_filter(request,category):
+    filtered_listings = Listing.objects.filter(category__name=category)
+
+    return render(request, "auctions/category.html", {
+        "filtered_listings": filtered_listings,
+        "category": category
+        })
