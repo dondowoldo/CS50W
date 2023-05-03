@@ -18,7 +18,7 @@ class CreateListing(ModelForm):
             "imageurl": forms.URLInput(attrs={'class':'form-control', 'placeholder': 'Paste Image URL here (Optional)'}),
             "category": forms.SelectMultiple(attrs={'class':'form-control'})
         }
-    
+
     def clean_price(self):
         price = self.cleaned_data.get("price")
         if price <= 0:

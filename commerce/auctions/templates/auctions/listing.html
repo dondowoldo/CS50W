@@ -86,6 +86,13 @@
                     </ul>
                 </li>
             </ul>
+            
+            {% for entry in comments %}
+            <b>{{ entry.user.username }}</b> |
+            {{ entry.comment }} <br/>
+            <i>{{ entry.timestamp|timesince }} ago</i><hr>
+            {% endfor %}   
+            
             {% if user.is_authenticated %}
                 <div class="form-group w-100">
                     <form action="" method="POST">
@@ -95,13 +102,7 @@
                     </form>
                 </div>
             {% endif %}
-
-            {% for entry in comments %}
-                <b>{{ entry.user.username }}</b> |
-                {{ entry.comment }} <br/>
-                <i>{{ entry.timestamp|timesince }} ago</i><hr>
-            {% endfor %}   
         </div>
     </div>
-
-{% endblock %}
+    
+    {% endblock %}
