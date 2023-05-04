@@ -2,45 +2,47 @@
 {% load static %}
 
 {% block body %}
-    <h2>Watched Listings</h2><hr>
+    <h3 class="display-4">Watched Listings</h3>
+    <hr><br>
         {% if not user.is_authenticated %}
             <h2><i>You need to log-in if you wish to see your Watch list.</i></h2>     
         {% else %}
             {% if not watchlist %}
                 <h2>Not watching any listings.</h2>
             {% else %}
+                <div class="container-fluid">
                 {% for listing in watchlist %}
-                    {% if listing.active %}
-                        <a class="listing" href="listing/{{ listing.id }}">
-                            <div class="container">    
-                                <div class="imgsection">
+                    <div class="listing_container">
+                        <a class="link_noattrs" href="{% url 'listing' listing.id %}">
+                               
                                     {% if listing.imageurl %}
                                         <img src="{{ listing.imageurl }}" width="300px" height="200px">
                                     {% else %}
                                         <img src="{% static 'auctions/noimage.jpg' %}" width="300px" height="200px">
                                     {% endif %}
-                                </div>
-                                <div class="active_content">
-                                    <h2>{{ listing.name }}</h2> <br/>
-                                    <h4>Price:
+                                
+                                    <h2 class="h_listing">{{ listing.name }}</h2></a>
+
+                                    <div class="h_price">Price:
                                         {% if not listing.item.last.price %}
                                             ${{ listing.price|floatformat:2 }}
                                         {% else %}
                                             ${{ listing.item.last.price|floatformat:2 }}
                                         {% endif %}
-                                    </h4> <br/>
-
-                                    <h4>{{ listing.description }}</h4> <br/>
-                                    <i>Posted by : {{ listing.creator }}</i><br/>
-                                    <i>{{ listing.date_created }}</i><br/>
-                                </div>
-                            </div>
-                        </a>
-                        <hr>
-                    {% endif %}
+                                    </div>
+                                    <hr>
+                                
+                                    <div class="description">
+                                        {{ listing.description }}
+                                    </div>
+                                    
+                                    <div class="posted_by">
+                                        <i>Posted by : <b>{{ listing.creator }}</b></i><br/>
+                                        <i>{{ listing.date_created }}</i>
+                                    </div>
+                    </div>
                 {% endfor %}
-
             {% endif %}  
- 
-        {% endif %}  
-    {% endblock %}
+                </div> 
+        {% endif %} 
+{% endblock %}
