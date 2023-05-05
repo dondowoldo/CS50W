@@ -3,13 +3,12 @@
 
 {% block body %}
     <h2>Listing: {{ listing.name }}</h2>
-    <div class="active_container">
         {% if listing.imageurl %}
             <img src="{{ listing.imageurl }}" width="500px">
         {% else %}
             <img src="{% static 'auctions/noimage.jpg' %}" width="500px">
         {% endif %}
-        <div class="active_listing">
+
             <h4>{{ listing.description }}</h4> <br/>
             <h3>Price: {% if maxprice %}${{ maxprice|floatformat:2 }} {% else %} ${{ listing.price|floatformat:2 }}{% endif %}</h3>
             {% if listing.active %}
@@ -23,11 +22,11 @@
                         </div>
                         {{ close }}
                     {% else %}
-                        <div class="form-group w-50">
+                        <div class="form-group w-25">
                             <form action="" method="POST">
                                 {% csrf_token %}
                                 {{ offer }}    
-                                <input type="submit" value="Bid" name="place_bid" class="btn btn-secondary">
+                                <input type="submit" value="Bid" name="place_bid" class="btn btn-primary" id="bid_button">
                             </form>
                         </div>
                     {% endif %}
@@ -39,14 +38,14 @@
                 <div class="form-group w-50">
                     <form action="" method="POST">
                         {% csrf_token %}
-                        <input type="submit" value="Add to Watchlist" name="watch_item" class="btn btn-secondary">
+                        <input type="submit" value="Add to Watchlist" name="watch_item" class="btn btn-success">
                     </form>
                 </div>
             {% elif user.is_authenticated and request.user in listing.watchlist.all %}
                 <div class="form-group w-50">
                     <form action="" method="POST">
                         {% csrf_token %}
-                        <input type="submit" value="Remove from Watchlist" name="unwatch_item" class="btn btn-secondary">
+                        <input type="submit" value="Remove from Watchlist" name="unwatch_item" class="btn btn-danger">
                     </form>
                 </div>
             {% endif %}
@@ -102,6 +101,6 @@
                     </form>
                 </div>
             {% endif %}
-        </div>
-    </div>
+
+
 {% endblock %}

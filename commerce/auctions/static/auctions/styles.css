@@ -83,3 +83,8 @@ hr {
 #categories {
     justify-content: center;
 }
+
+#bid_button {
+    margin: 10px;
+    margin-left: 0;
+}

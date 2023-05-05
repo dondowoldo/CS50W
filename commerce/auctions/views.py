@@ -180,11 +180,11 @@ def listing_view(request, listing_id):
         
         if request.POST.get("watch_item"):
             listing.watchlist.add(request.user)
-            return HttpResponseRedirect(reverse("index"))
+            return HttpResponseRedirect(reverse("listing", args=[listing.id]))
         
         if request.POST.get("unwatch_item"):
             listing.watchlist.remove(request.user)
-            return HttpResponseRedirect(reverse("index"))
+            return HttpResponseRedirect(reverse("listing", args=[listing.id]))
     else:
         return render(request, "auctions/listing.html", {
             "comment_form": PostComment(),
