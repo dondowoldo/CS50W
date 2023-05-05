@@ -5,6 +5,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from .forms import CreateListing, PlaceBid, PostComment, SelectCategory
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
 from .models import User, Listing, Bid, Category, Comment
 
@@ -140,8 +141,10 @@ def listing_view(request, listing_id):
                 completebid.bidder = request.user
                 completebid.item = listing
                 completebid.save()
+                messages.success(request, ("Your bid for " + listing.name + " was successful."))
                 return HttpResponseRedirect(reverse("listing", args=[listing.id]))
             else:
+                messages.error(request, ("An error has occured."))
                 return render(request, "auctions/listing.html", {
                     "comments": comments,
                     "offer": offer,
@@ -176,14 +179,17 @@ def listing_view(request, listing_id):
         if request.POST.get("close_bid"):
             listing.active = False
             listing.save()
+            messages.info(request, ("Your auction for " + listing.name + " has been closed."))
             return HttpResponseRedirect(reverse("index"))
         
         if request.POST.get("watch_item"):
             listing.watchlist.add(request.user)
+            messages.info(request, (listing.name + " has been added to your Watchlist."))
             return HttpResponseRedirect(reverse("listing", args=[listing.id]))
         
         if request.POST.get("unwatch_item"):
             listing.watchlist.remove(request.user)
+            messages.warning(request, (listing.name + " has been removed from your Watchlist."))
             return HttpResponseRedirect(reverse("listing", args=[listing.id]))
     else:
         return render(request, "auctions/listing.html", {
