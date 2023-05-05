@@ -1,6 +1,6 @@
-* {
-    /* outline: red dashed 1px; */
-}
+/* * {
+    outline: red dashed 1px;
+} */
 
 body {
     padding: 10px;
@@ -78,4 +78,8 @@ hr {
 
 .display-4 {
     text-align: center;
+}
+
+#categories {
+    justify-content: center;
 }
