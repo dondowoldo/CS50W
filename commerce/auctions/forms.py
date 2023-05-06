@@ -1,6 +1,14 @@
 from .models import Listing, Bid, Comment, Category
 from django import forms
 from django.forms import ModelForm
+#from django.forms.utils import ErrorList
+
+# class DivErrorList(ErrorList):            // If we want bootstrap alert styling for errors
+#     def __str__(self):                    // need to provide error_class=DivErrorList argument
+#         return self.as_divs()             // in form constructor
+#     def as_divs(self):
+#         if not self: return ''
+#         return '<div class="errorlist">%s</div>' % ''.join(['<div class="alert alert-danger">%s</div>' % e for e in self])
 
 class CreateListing(ModelForm):
     class Meta:
@@ -43,7 +51,7 @@ class PlaceBid(ModelForm):
     def clean_price(self):
         bid = self.cleaned_data.get('price')      
         if bid is None:
-            raise forms.ValidationError('You must enter an amount in order to bid.')
+            raise forms.ValidationError(['You must enter an amount in order to bid.'])
         if self.maxprice is not None:
             if bid <= self.maxprice:
                 raise forms.ValidationError('Your bid needs to be higher than current amount')

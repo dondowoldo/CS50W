@@ -88,3 +88,8 @@ hr {
     margin: 10px;
     margin-left: 0;
 }
+
+.errorlist {
+    list-style: none;
+    color: red;
+}

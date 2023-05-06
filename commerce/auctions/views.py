@@ -12,7 +12,6 @@ from .models import User, Listing, Bid, Category, Comment
 
 def index(request):
     listings = Listing.objects.all()
-    # (Listing.objects.all())[i].item.all(j)
     return render(request, "auctions/index.html", {
         "listings": listings
     })
@@ -71,18 +70,16 @@ def register(request):
 
 @login_required
 def create(request):
-    submitted = False
     if request.method == "POST":
         form = CreateListing(request.POST)
         if form.is_valid():            
             complete_form = form.save(commit=False)       ## saves form but doesnt commit to db. Allows us to populate creator field with currently logged in
             complete_form.creator = request.user
             complete_form.save()
-            submitted = True
-            return render(request, "auctions/create.html", {
-                "submitted": submitted
-            })
+            messages.success(request, "Listing successfully created!")
+            return HttpResponseRedirect(reverse("listing", args=[complete_form.id]))
         else:
+            messages.error(request, "An error has occured.")
             return render(request, "auctions/create.html",{
                 "form": form
             })
@@ -153,7 +150,7 @@ def listing_view(request, listing_id):
                     "maxprice": maxprice,
                     "bidcount": bidcount,
                     "maxbidder": maxbidder,
-                    "categories": categories,
+                    "categories": categories
                     })
         if request.POST.get("sub_comment"):
             comment = PostComment(request.POST)

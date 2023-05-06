@@ -2,9 +2,6 @@
 
 {% block body %}
     <center>
-        {% if submitted %}
-            <h1> Listing successfully created</h1>
-        {% else %}
         <h1 class="display-3">Create a new listing</h1><br/><br/>
             <div class="form-group w-50">
                 <form action="" method="POST">
@@ -13,6 +10,5 @@
                     <input type="submit" value="Submit" class="btn btn-secondary">
                 </form>
             </div>
-        {% endif %}
     </center>
 {% endblock %}
