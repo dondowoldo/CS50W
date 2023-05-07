@@ -1,6 +1,6 @@
-* {
+/* * {
     outline: red dashed 1px;
-}
+} */
 
 body {
     padding: 10px;
@@ -86,10 +86,74 @@ hr {
 
 #bid_button {
     margin: 10px;
-    margin-left: 0;
+    margin-left: 10px;
+    display: flex;
 }
 
 .errorlist {
     list-style: none;
     color: red;
+}
+
+.details_container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    /* justify-content: space-between; */ 
+}
+
+.left_column {
+    display: flex;
+    flex-direction: column;
+    margin-left: 5%;
+}
+
+.right_column {
+    display: flex;
+    flex-direction: column;
+    margin-left: 15%;
+    align-items:flex-start;
+    justify-content: center;
+}
+
+.details_img {
+    margin-top: 50px;
+    max-width: 600px;
+    max-height: 500px;
+}
+
+.description_detail {
+    margin-top: 10px;
+    padding:10px;
+    width: 400px;
+    height: 200px;
+    border-radius: 10px;
+    box-shadow: 0 0 2px 2px rgb(145, 143, 143);
+    /* background-color:blanchedalmond */
+}
+
+.split_container {
+    display: flex;
+    flex-direction: column;
+}
+
+#sub_comment {
+    margin-top: 10px;
+}
+
+.comments_section {
+    width: 50%;
+    background-color: bisque;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    padding:10px;
+    border-radius: 10px;
+}
+
+.price_detail {
+    margin-top: 20px;
+    display:flex;
+    flex-direction: row;
+    gap: 3em;
+    align-items: baseline;
 }
