@@ -51,7 +51,7 @@ class PlaceBid(ModelForm):
     def clean_price(self):
         bid = self.cleaned_data.get('price')      
         if bid is None:
-            raise forms.ValidationError(['You must enter an amount in order to bid.'])
+            raise forms.ValidationError(['You must enter a bid amount.'])
         if self.maxprice is not None:
             if bid <= self.maxprice:
                 raise forms.ValidationError('Your bid needs to be higher than current amount')

@@ -141,7 +141,7 @@ def listing_view(request, listing_id):
                 messages.success(request, ("Your bid for " + listing.name + " was successful."))
                 return HttpResponseRedirect(reverse("listing", args=[listing.id]))
             else:
-                messages.error(request, ("An error has occured."))
+                messages.error(request, ("Your bid was unsuccessful."))
                 return render(request, "auctions/listing.html", {
                     "comments": comments,
                     "offer": offer,
