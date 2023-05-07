@@ -148,6 +148,7 @@ hr {
     margin-bottom: 5px;
     padding:10px;
     border-radius: 10px;
+    word-wrap: break-word;
 }
 
 .price_detail {
