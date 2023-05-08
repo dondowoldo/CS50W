@@ -191,3 +191,11 @@ ul.errorlist {
 ul.errorlist li {
     color: red;
 }
+
+.index_img {
+    margin:auto;
+    display: flex;
+    justify-content: center;
+    max-width: 300px;
+    height: 200px;
+}
