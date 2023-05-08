@@ -64,7 +64,7 @@
                     {% else %}
             </div>
                         <div class="alert alert-primary">
-                            <h4><i>You need to be logged in to bid on this item</i></h4>
+                            <h4><i>You need to be logged in to bid on this item.</i></h4>
                         </div>
                     {% endif %}
                 {% else %}
@@ -153,6 +153,10 @@
             <input type="submit" id="sub_comment" value="Submit comment" name="sub_comment" class="btn btn-success">
         </form>
     </div>
+    {% else %}
+        <div class="alert alert-primary" style="width: 50%; margin-top: 20px;">
+            <h4><i>You need to be logged in to add comments.</i></h4>
+        </div> 
     {% endif %}
 </div>
 
