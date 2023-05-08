@@ -111,7 +111,7 @@ hr {
 .right_column {
     display: flex;
     flex-direction: column;
-    margin-left: 15%;
+    margin-left: 20%;
     align-items:flex-start;
     justify-content: center;
 }
@@ -157,4 +157,32 @@ hr {
     flex-direction: row;
     gap: 3em;
     align-items: baseline;
+}
+
+
+#details_ul {
+    margin: 10px;
+    margin-left: 0;
+    padding: 0;
+}
+
+#details_ul li {
+    list-style: none;
+}
+
+#taglist {
+    display: inline;
+    list-style: none;
+  }
+
+#taglist li {
+    display: inline;
+  }
+
+#taglist li:after {
+    content: " , ";
+}
+
+#taglist li:last-child:after {
+    content: "";
 }
