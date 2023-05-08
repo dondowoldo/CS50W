@@ -3,10 +3,17 @@
 {% block body %}
     <center>
         <h1 class="display-3">Create a new listing</h1><br/><br/>
-            <div class="form-group w-50">
+            <div class="form-group w-50 novalidate">
                 <form action="" method="POST">
                     {% csrf_token%}
-                    {{ form.as_p }}    
+                    {% for field in form %}
+                        {% if field.errors %}
+                            <p>{{ field }}</p>
+                            {{ field.errors }}
+                        {% else %}
+                            <p>{{ field }}</p>
+                        {% endif %}
+                    {% endfor %}    
                     <input type="submit" value="Submit" class="btn btn-secondary">
                 </form>
             </div>

@@ -90,11 +90,6 @@ hr {
     display: flex;
 }
 
-.errorlist {
-    list-style: none;
-    color: red;
-}
-
 .details_container {
     display: flex;
     flex-direction: row;
@@ -185,4 +180,14 @@ hr {
 
 #taglist li:last-child:after {
     content: "";
+}
+
+ul.errorlist {
+    list-style: none;
+    width: 100%;
+    text-align: center;
+  }
+  
+ul.errorlist li {
+    color: red;
 }

@@ -36,14 +36,19 @@
                 {% if listing.active %}               
                     {% if user.is_authenticated %}
                         {% if user.id != listing.creator.id %}
-                        <div class="form-group row">
-                            <form class="form-inline" action="" method="POST">
-                                {% csrf_token %}
-                                {{ offer }}    
-                                <input type="submit" value="Bid" name="place_bid" class="btn btn-primary" id="bid_button">
-                            </form>
-                        </div>    
-                </div>    
+                            <div class="form-group row">
+                                <form class="form-inline" action="" method="POST">
+                                    {% csrf_token %}
+                                    {{ offer.price }}
+                                    <input type="submit" value="Bid" name="place_bid" class="btn btn-primary" id="bid_button">
+                            </div>
+                </div>
+                                {% if offer.errors %}
+                                {{ offer.price.errors }}
+                                {% endif %}
+                                </form>
+                                
+                    
                         {% else %}
                 </div>
                             <div class="form-group w-50">
