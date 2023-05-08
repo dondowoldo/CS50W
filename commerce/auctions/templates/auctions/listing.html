@@ -2,41 +2,42 @@
 {% load static %}
 
 {% block body %}
+
 <div class="split_container">
-<div class="details_container">
-<div class="left_column">
-        
-        {% if listing.imageurl %}
-            <img class="details_img" src="{{ listing.imageurl }}">
-        {% else %}
-            <img class="details_img" src="{% static 'auctions/noimage.jpg' %}">
-        {% endif %}
+    <div class="details_container">
+        <div class="left_column">
+            {% if listing.imageurl %}
+                <img class="details_img" src="{{ listing.imageurl }}">
+            {% else %}
+                <img class="details_img" src="{% static 'auctions/noimage.jpg' %}">
+            {% endif %}
 
             <ul id="details_ul">
                 <li><b>Listed by : </b>{{ listing.creator }}</li>
                 <li><b>Created on : </b>{{ listing.date_created }}</li>
                 <li style="display: inline;"><b>Category:</b></li>               
                     <ul style="padding: 5px" id="taglist">
-                    {% if categories %}
-                    {% for category in categories %}
-                        <li><i><a class="category" href="{% url 'category' category.name %}">{{ category.name }}</a></i></li>
-                    {% endfor %}
-                    {% else %}
-                    <li>No Category Listed</li>
-                    {% endif %}
-                    </ul>
-                </li>
+                        {% if categories %}
+                            {% for category in categories %}
+                                <li><i><a class="category" href="{% url 'category' category.name %}">{{ category.name }}</a></i></li>
+                            {% endfor %}
+                        {% else %}
+                            <li>No Category Listed</li>
+                        {% endif %}
+                    </ul>             
             </ul>  
            
-</div>      
-            <div class="right_column">
-                <h2 class="display-4">{{ listing.name }}</h2>
-                <div class="description_detail">
+        </div>
+
+        <div class="right_column">
+            <h2 class="display-4">{{ listing.name }}</h2>
+            <div class="description_detail">
                 <h4><i>{{ listing.description }}</i></h4> <br/>
-                </div>
+            </div>
                 
-                <div class="price_detail">
-                    <h3>{% if maxprice %}${{ maxprice|floatformat:2 }} {% else %} ${{ listing.price|floatformat:2 }}{% endif %}</h3>
+            <div class="price_detail">
+                <h3>{% if maxprice %}${{ maxprice|floatformat:2 }} {% else %} ${{ listing.price|floatformat:2 }}{% endif %}</h3>
+
                 {% if listing.active %}               
                     {% if user.is_authenticated %}
                         {% if user.id != listing.creator.id %}
@@ -46,15 +47,13 @@
                                     {{ offer.price }}
                                     <input type="submit" value="Bid" name="place_bid" class="btn btn-primary" id="bid_button">
                             </div>
-                </div>
-                                {% if offer.errors %}
-                                {{ offer.price.errors }}
-                                {% endif %}
-                                </form>
-                                
-                    
+            </div>
+                                    {% if offer.errors %}
+                                    {{ offer.price.errors }}
+                                    {% endif %}
+                                </form>      
                         {% else %}
-                </div>
+            </div>
                             <div class="form-group w-50">
                                 <form action="" method="POST">
                                     {% csrf_token %}
@@ -63,14 +62,15 @@
                             </div>
                         {% endif %}        
                     {% else %}
-                </div>
+            </div>
                         <div class="alert alert-primary">
                             <h4><i>You need to be logged in to bid on this item</i></h4>
                         </div>
                     {% endif %}
                 {% else %}
-                    </div>
+            </div>
                 {% endif %}
+
             {% if user.is_authenticated and request.user not in listing.watchlist.all %}
                 <div class="form-group w-50">
                     <form action="" method="POST">
@@ -86,58 +86,56 @@
                     </form>
                 </div>
             {% endif %}
-
-
-
-        
-        {% if not listing.active and user.is_authenticated and maxbidder.id != user.id %}
-        <div class="alert alert-primary">
-            <h4>This auction has ended</h4>
-        </div>     
-        {% elif not listing.active and not user.is_authenticated and bidcount > 0 %}
+       
+            {% if not listing.active and user.is_authenticated and maxbidder.id != user.id %}
             <div class="alert alert-primary">
-                <h3>This auction has ended.<br/>If you bid on this item, please log-in to see if you won.</h3>
-            </div>
-        {% elif not listing.active and not user.is_authenticated and bidcount == 0 %}
-            <div class="alert alert-primary">
-                <h3>This auction has ended.</h3>
-            </div>
-        {% elif not listing.active and user.is_authenticated and maxbidder.id == user.id %}
-            <div class="alert alert-primary">
-                <h3>Congratulations{% if user.first_name %} {{ user.first_name }}{% endif %}, <br/>You have won the auction!</h3>   
-            </div>        
-        {% endif %}
+                <h4>This auction has ended</h4>
+            </div>     
+            {% elif not listing.active and not user.is_authenticated and bidcount > 0 %}
+                <div class="alert alert-primary">
+                    <h3>This auction has ended.<br/>If you bid on this item, please log-in to see if you won.</h3>
+                </div>
+            {% elif not listing.active and not user.is_authenticated and bidcount == 0 %}
+                <div class="alert alert-primary">
+                    <h3>This auction has ended.</h3>
+                </div>
+            {% elif not listing.active and user.is_authenticated and maxbidder.id == user.id %}
+                <div class="alert alert-primary">
+                    <h3>Congratulations{% if user.first_name %} {{ user.first_name }}{% endif %}, <br/>You have won the auction!</h3>   
+                </div>        
+            {% endif %}
 
-        {% if bidcount == 0 and listing.active %}
-            <div class="alert alert-warning">
-                <h6>No bids so far.</h6>
-            </div>
-        {% elif bidcount == 1 and listing.active %}
-            <div class="alert alert-warning">
-                <h6>{{ bidcount }} bid so far.</h6>
-                <h6>{{ maxbidder }} is the current auction leader.</h6>
-            </div>
-        {% elif bidcount == 0 and not listing.active %}
-            <div class="alert alert-warning">
-                <h6>This item hasn't been sold.</h6>
-            </div>
-        {% elif bidcount != 0 and listing.active %}
-            <div class="alert alert-warning">
-                <h6>{{ bidcount }} bids so far.</h6>
-                <h6>{{ maxbidder }} is the current auction leader.</h6>
-            </div>
-        {% elif user.id == maxbidder.id and listing.active == true %}
-            <div class="alert alert-warning">
-                <h6>{{ bidcount }} bids so far.</h6>
-                <h2>You are the highest bidder!</h2>
-            </div>
-        {% endif %}
-    </div>
-        </div>   
-    </div>
-    <hr>
-    <div class="split_container">
-        {% if comments %}
+            {% if bidcount == 0 and listing.active %}
+                <div class="alert alert-warning">
+                    <h6>No bids so far.</h6>
+                </div>
+            {% elif bidcount == 1 and listing.active %}
+                <div class="alert alert-warning">
+                    <h6>{{ bidcount }} bid so far.</h6>
+                    <h6>{{ maxbidder }} is the current auction leader.</h6>
+                </div>
+            {% elif bidcount == 0 and not listing.active %}
+                <div class="alert alert-warning">
+                    <h6>This item hasn't been sold.</h6>
+                </div>
+            {% elif bidcount != 0 and listing.active %}
+                <div class="alert alert-warning">
+                    <h6>{{ bidcount }} bids so far.</h6>
+                    <h6>{{ maxbidder }} is the current auction leader.</h6>
+                </div>
+            {% elif user.id == maxbidder.id and listing.active == true %}
+                <div class="alert alert-warning">
+                    <h6>{{ bidcount }} bids so far.</h6>
+                    <h2>You are the highest bidder!</h2>
+                </div>
+            {% endif %}
+        </div>
+    </div>   
+</div>
+<hr>
+    
+<div class="split_container">
+    {% if comments %}
         {% for entry in comments %}
         <div class="comments_section">
             <b>{{ entry.user.username }}</b> |
@@ -145,19 +143,17 @@
             <i style="color: grey;">{{ entry.timestamp|timesince }} ago</i>
         </div>
         {% endfor %}   
-        {% endif %}
-        
-        {% if user.is_authenticated %}  
-        <div class="form-group w-50" style="margin-top: 10px;">
-            <form action="" method="POST">
-                {% csrf_token %}
-                {{ comment_form }}
-                <input type="submit" id="sub_comment" value="Submit comment" name="sub_comment" class="btn btn-success">
-            </form>
-        </div>
-        {% endif %}
+    {% endif %}
+    
+    {% if user.is_authenticated %}  
+    <div class="form-group w-50" style="margin-top: 10px;">
+        <form action="" method="POST">
+            {% csrf_token %}
+            {{ comment_form }}
+            <input type="submit" id="sub_comment" value="Submit comment" name="sub_comment" class="btn btn-success">
+        </form>
+    </div>
+    {% endif %}
 </div>
-            
-
 
 {% endblock %}

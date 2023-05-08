@@ -2,6 +2,7 @@
 {% load static %}
 
 {% block body %}
+
     <h3 class="display-4">Categories</h3>
     <hr><br>
     <div class="container-fluid" id="categories">      
@@ -9,4 +10,5 @@
                 <a class="category" href="{% url 'category' category.name %}"><button type="button" class="btn btn-primary">{{ category.name }}</button></a>
             {% endfor %}     
     </div>
+
 {% endblock %}

@@ -2,6 +2,7 @@
 {% load static %}
 
 {% block body %}
+
     {% if not filtered_listings %}
         <h3 class="display-4">No Active Listings in category : {{ category }}</h3>
     {% else %}
@@ -41,5 +42,6 @@
                 {% endif %}
             {% endfor %}
         </div> 
-    {% endif %}    
+    {% endif %}
+       
 {% endblock %}

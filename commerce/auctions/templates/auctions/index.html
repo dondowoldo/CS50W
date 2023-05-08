@@ -2,44 +2,46 @@
 {% load static %}
 
 {% block body %}
+
     <h3 class="display-4">Active Listings</h3>
     <hr><br>
-        {% if not listings %}
-            <h2 class="display-4">No Active Listings</h2>
-        {% else %}
-            <div class="container-fluid">
-                {% for listing in listings %}        
-                    {% if listing.active %}
-                        <div class="listing_container">
-                            <a class ="link_noattrs" href="{% url 'listing' listing.id %}">
-                            {% if listing.imageurl %}
-                                <img src="{{ listing.imageurl }}" width="300px" height="200px">
-                            {% else %}
-                                <img src="{% static 'auctions/noimage.jpg' %}" width="300px" height="200px">
-                            {% endif %}
+    {% if not listings %}
+        <h2 class="display-4">No Active Listings</h2>
+    {% else %}
+        <div class="container-fluid">
+            {% for listing in listings %}        
+                {% if listing.active %}
+                    <div class="listing_container">
+                        <a class ="link_noattrs" href="{% url 'listing' listing.id %}">
+                        {% if listing.imageurl %}
+                            <img src="{{ listing.imageurl }}" width="300px" height="200px">
+                        {% else %}
+                            <img src="{% static 'auctions/noimage.jpg' %}" width="300px" height="200px">
+                        {% endif %}
+                        
+                        <h2 class="h_listing">{{ listing.name }}</h2></a>
                             
-                                <h2 class="h_listing">{{ listing.name }}</h2></a>
-                                
-                                <div class="h_price">Price: 
-                                    {% if not listing.item.last.price %}
-                                        ${{ listing.price|floatformat:2 }}
-                                    {% else %}
-                                        ${{ listing.item.last.price|floatformat:2 }}
-                                    {% endif %}  
-                                </div>
-                                <hr>
-                                
-                                <div class="description">
-                                    {{ listing.description }}
-                                </div>
-
-                                <div class="posted_by">
-                                    <i>Posted by : <b>{{ listing.creator }}</b></i><br/>
-                                    <i>{{ listing.date_created }}</i>
-                                </div>
+                        <div class="h_price">Price: 
+                            {% if not listing.item.last.price %}
+                                ${{ listing.price|floatformat:2 }}
+                            {% else %}
+                                ${{ listing.item.last.price|floatformat:2 }}
+                            {% endif %}  
                         </div>
-                    {% endif %}
-                {% endfor %}              
-            </div>           
-        {% endif %}       
+                        <hr>
+                        
+                        <div class="description">
+                            {{ listing.description }}
+                        </div>
+
+                        <div class="posted_by">
+                            <i>Posted by : <b>{{ listing.creator }}</b></i><br/>
+                            <i>{{ listing.date_created }}</i>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}              
+        </div>           
+    {% endif %}
+           
 {% endblock %}
