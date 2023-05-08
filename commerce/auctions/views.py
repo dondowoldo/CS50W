@@ -5,13 +5,13 @@ from django.shortcuts import render
 from django.urls import reverse
 from .forms import CreateListing, PlaceBid, PostComment, SelectCategory
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
 from .models import User, Listing, Bid, Category, Comment
 
 
 def index(request):
     listings = Listing.objects.all()
-    # (Listing.objects.all())[i].item.all(j)
     return render(request, "auctions/index.html", {
         "listings": listings
     })
@@ -68,20 +68,18 @@ def register(request):
     else:
         return render(request, "auctions/register.html")
 
-@login_required
+@login_required(login_url='login')
 def create(request):
-    submitted = False
     if request.method == "POST":
         form = CreateListing(request.POST)
         if form.is_valid():            
             complete_form = form.save(commit=False)       ## saves form but doesnt commit to db. Allows us to populate creator field with currently logged in
             complete_form.creator = request.user
             complete_form.save()
-            submitted = True
-            return render(request, "auctions/create.html", {
-                "submitted": submitted
-            })
+            messages.success(request, "Listing successfully created!")
+            return HttpResponseRedirect(reverse("listing", args=[complete_form.id]))
         else:
+            messages.error(request, "An error has occured.")
             return render(request, "auctions/create.html",{
                 "form": form
             })
@@ -140,9 +138,12 @@ def listing_view(request, listing_id):
                 completebid.bidder = request.user
                 completebid.item = listing
                 completebid.save()
+                messages.success(request, ("Your bid for " + listing.name + " was successful."))
                 return HttpResponseRedirect(reverse("listing", args=[listing.id]))
             else:
+                messages.error(request, ("Your bid was unsuccessful."))
                 return render(request, "auctions/listing.html", {
+                    "comment_form": PostComment(),
                     "comments": comments,
                     "offer": offer,
                     "listing": listing,
@@ -150,7 +151,7 @@ def listing_view(request, listing_id):
                     "maxprice": maxprice,
                     "bidcount": bidcount,
                     "maxbidder": maxbidder,
-                    "categories": categories,
+                    "categories": categories
                     })
         if request.POST.get("sub_comment"):
             comment = PostComment(request.POST)
@@ -176,15 +177,18 @@ def listing_view(request, listing_id):
         if request.POST.get("close_bid"):
             listing.active = False
             listing.save()
+            messages.info(request, ("Your auction for " + listing.name + " has been closed."))
             return HttpResponseRedirect(reverse("index"))
         
         if request.POST.get("watch_item"):
             listing.watchlist.add(request.user)
-            return HttpResponseRedirect(reverse("index"))
+            messages.info(request, (listing.name + " has been added to your Watchlist."))
+            return HttpResponseRedirect(reverse("listing", args=[listing.id]))
         
         if request.POST.get("unwatch_item"):
             listing.watchlist.remove(request.user)
-            return HttpResponseRedirect(reverse("index"))
+            messages.warning(request, (listing.name + " has been removed from your Watchlist."))
+            return HttpResponseRedirect(reverse("listing", args=[listing.id]))
     else:
         return render(request, "auctions/listing.html", {
             "comment_form": PostComment(),

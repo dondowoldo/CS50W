@@ -17,7 +17,7 @@ class Listing(models.Model):
     creator = models.ForeignKey(User, null=True, on_delete=models.CASCADE, related_name="created")
     name = models.CharField(max_length=100)
     price = models.FloatField()
-    description = models.TextField(max_length=300)
+    description = models.TextField(max_length=155)
     imageurl = models.URLField(max_length=300, blank=True)
     date_created= models.DateTimeField(auto_now_add=True, null=True)
     category = models.ManyToManyField(Category, blank=True, related_name="category")
