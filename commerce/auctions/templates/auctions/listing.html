@@ -17,9 +17,13 @@
                 <li><b>Created on : </b>{{ listing.date_created }}</li>
                 <li style="display: inline;"><b>Category:</b></li>               
                     <ul style="padding: 5px" id="taglist">
+                    {% if categories %}
                     {% for category in categories %}
                         <li><i><a class="category" href="{% url 'category' category.name %}">{{ category.name }}</a></i></li>
                     {% endfor %}
+                    {% else %}
+                    <li>No Category Listed</li>
+                    {% endif %}
                     </ul>
                 </li>
             </ul>  
