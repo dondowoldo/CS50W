@@ -94,7 +94,7 @@ hr {
     display: flex;
     flex-direction: row;
     width: 100%;
-    /* justify-content: space-between; */ 
+    justify-content: space-around; 
 }
 
 .left_column {
@@ -106,7 +106,7 @@ hr {
 .right_column {
     display: flex;
     flex-direction: column;
-    margin-left: 20%;
+    margin-right: 5%;
     align-items:flex-start;
     justify-content: center;
 }
